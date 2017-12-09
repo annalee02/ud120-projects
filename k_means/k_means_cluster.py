@@ -48,9 +48,9 @@ data_dict.pop("TOTAL", 0)
 ### can be any key in the person-level dictionary (salary, director_fees, etc.)
 feature_1 = "salary"
 feature_2 = "exercised_stock_options"
-feature_3 = "total_payments"
+#feature_3 = "total_payments"
 poi  = "poi"
-features_list = [poi, feature_1, feature_2, feature_3]
+features_list = [poi, feature_1, feature_2]
 data = featureFormat(data_dict, features_list )
 poi, finance_features = targetFeatureSplit( data )
 
@@ -59,7 +59,7 @@ poi, finance_features = targetFeatureSplit( data )
 ### you'll want to change this line to
 ### for f1, f2, _ in finance_features:
 ### (as it's currently written, the line below assumes 2 features)
-for f1, f2, _ in finance_features:
+for f1, f2 in finance_features:
     plt.scatter( f1, f2 )
 plt.show()
 
@@ -72,7 +72,7 @@ pred = kmeans.fit_predict(finance_features)
 max_value = float("-inf")
 min_value = float("inf")
 
-# feature scaling
+# feature scaling preview
 for k, v in data_dict.iteritems():
     if v["salary"] != "NaN":
         if v["salary"] > max_value:
@@ -82,6 +82,16 @@ for k, v in data_dict.iteritems():
 
 print "max_value: ",max_value
 print "min_value: ",min_value
+
+# MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler()
+rescaled_finance_features = scaler.fit_transform(finance_features)
+## print rescaled_finance_features[:5]
+
+financial_features_test = numpy.array([[200000., 1000000.]])
+financial_features_test_transformed = scaler.transform(financial_features_test)
+print financial_features_test_transformed
 
 ### rename the "name" parameter when you change the number of features
 ### so that the figure gets saved to a different file
