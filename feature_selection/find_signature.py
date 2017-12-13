@@ -8,12 +8,10 @@ numpy.random.seed(42)
 ### The words (features) and authors (labels), already largely processed.
 ### These files should have been created from the previous (Lesson 10)
 ### mini-project.
-words_file = "../text_learning/your_word_data.pkl" 
+words_file = "../text_learning/your_word_data.pkl"
 authors_file = "../text_learning/your_email_authors.pkl"
 word_data = pickle.load( open(words_file, "r"))
 authors = pickle.load( open(authors_file, "r") )
-
-
 
 ### test_size is the percentage of events assigned to the test set (the
 ### remainder go into training)
@@ -32,12 +30,34 @@ features_test  = vectorizer.transform(features_test).toarray()
 ### a classic way to overfit is to use a small number
 ### of data points and a large number of features;
 ### train on only 150 events to put ourselves in this regime
-features_train = features_train[:150].toarray()
+features_train = features_train[:150] #.toarray()
 labels_train   = labels_train[:150]
 
 
 
 ### your code goes here
+# Decision tree
+from sklearn import tree
+clf = tree.DecisionTreeClassifier()
+clf = clf.fit(features_train, labels_train)
+pred = clf.predict(features_test)
 
+from sklearn.metrics import accuracy_score
+print "Accuracy:", accuracy_score(pred, labels_test)
 
+importance=clf.feature_importances_
+
+count=0
+most_important_feature = 0.2
+for feature in importance:
+    if feature > most_important_feature:
+        most_important_feature = feature
+        print most_important_feature
+        print "What is the number of this feature?", count
+    count += 1
+
+# The most powerful word
+names = vectorizer.get_feature_names()
+#print names[33614]
+print names[14343]
 
